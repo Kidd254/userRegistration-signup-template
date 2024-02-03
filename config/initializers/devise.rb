@@ -20,6 +20,7 @@ Devise.setup do |config|
   # Configure the parent class to the devise controllers.
   # config.parent_controller = 'DeviseController'
 
+  config.timeout_in = 1.hour 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
@@ -168,6 +169,9 @@ Devise.setup do |config|
 
   # Invalidates all the remember me tokens when the user signs out.
   config.expire_all_remember_me_on_sign_out = true
+  config.remember_for = 2.weeks    # How long the session should be remembered for (default is 2 weeks)
+   config.extend_remember_period = false  # Whether to extend the remember period automatically on each login
+
 
   # If true, extends the user's remember period when remembered via cookie.
   # config.extend_remember_period = false
@@ -224,6 +228,7 @@ Devise.setup do |config|
   # Time interval you can reset your password with a reset password key.
   # Don't put a too small interval or your users won't have the time to
   # change their passwords.
+  config.reset_password_keys = [:email]  # Which key to use when finding the resource to reset the password
   config.reset_password_within = 6.hours
 
   # When set to false, does not sign a user in automatically after their password is
