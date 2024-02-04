@@ -1,7 +1,31 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   include RackSessionFix
+  before_action :send_otp, only: [:create]
+  before_action :verify_otp, only: [:create]
+  
 
   respond_to :json
+  def send_otp
+    user = current_user
+    otp = user.generate_otp
+    user.update(otp_password: otp)
+
+    ApplicationMailer.confirmation_instructions(user, otp).deliver_now
+
+    render json: { message: "OTP sent successfully" }
+  end
+
+  def verify_otp
+    user = current_user
+    entered_otp = params[:otp]
+
+    if user.verify_otp(entered_otp)
+      user.update(verified: true)
+      render json: { message: "OTP verified successfully" }
+    else
+      render json: { error: "Invalid OTP" }, status: :unprocessable_entity
+    end
+  end
 
   private
 
